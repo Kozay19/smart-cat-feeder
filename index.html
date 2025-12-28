@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🐱 Smart Cat Feeder</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <h1>🐱 Smart Cat Feeder</h1>
+  <div id="clock">00:00:00</div>
+  <div id="status" class="status disconnected">DISCONNECTED</div>
+
+  <div class="switch">
+    <button id="btn1" class="active" onclick="showFeeder(1)">🐾 Feeder 1</button>
+    <button id="btn2" onclick="showFeeder(2)">🐾 Feeder 2</button>
+  </div>
+
+  <div class="feeder">
+    <div class="cat">😺</div>
+    <h2 id="fid">FEEDER_1</h2>
+
+    <div class="cards">
+      <div class="card">🍗 Berat Pakan<br><b id="weight">0</b> g</div>
+      <div class="card">
+        📦 Stok<br><b id="stock">0</b>%
+        <div class="bar"><div id="barStock"></div></div>
+      </div>
+    </div>
+
+    <div class="stok-label" id="stokLabel">🚨 Stok Habis!</div>
+
+    <h3>📜 Riwayat Makan</h3>
+    <ul id="history"></ul>
+
+    <h3>📊 Grafik Jam RFID</h3>
+    <canvas id="rfidChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
