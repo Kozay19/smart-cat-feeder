@@ -1,82 +1,65 @@
 const clockEl=document.getElementById("clock");
 const dateEl=document.getElementById("date");
+setInterval(()=>{
+  const d=new Date();
+  clockEl.innerText=d.toLocaleTimeString();
+  dateEl.innerText=d.toLocaleDateString("id-ID",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+},1000);
+
 const themeBtn=document.getElementById("themeToggle");
-const statusBox=document.getElementById("status");
+themeBtn.onclick=()=>{
+  document.body.classList.toggle("dark");
+  document.body.classList.toggle("light");
+  themeBtn.innerText=document.body.classList.contains("dark")?"🌙":"☀️";
+};
+
 const weightEl=document.getElementById("weight");
 const stockEl=document.getElementById("stock");
 const stokLabel=document.getElementById("stokLabel");
-const historyEl=document.getElementById("history");
-const fidEl=document.getElementById("fid");
 const barStock=document.getElementById("barStock");
 const cat=document.getElementById("cat");
-const btn1=document.getElementById("btn1");
-const btn2=document.getElementById("btn2");
+const historyEl=document.getElementById("history");
 
-let current="FEEDER_1",feeders={},lastUID="",lastTap=0;
+let feeders={},current="FEEDER_1",lastUID="";
 
-setInterval(()=>{
- const d=new Date();
- clockEl.innerText=d.toLocaleTimeString();
- dateEl.innerText=d.toLocaleDateString("id-ID",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
-},1000);
-
-themeBtn.onclick=()=>{
- document.body.classList.toggle("dark");
- document.body.classList.toggle("light");
-};
-
-const client=mqtt.connect("wss://1f1fb9c5b684449c8ecce6cc5f320ad5.s1.eu.hivemq.cloud:8884/mqtt",{
- clientId:"web_"+Math.random().toString(16).substr(2,8),
- username:"TugasBesar",
- password:"Leadtheway23"
-});
-
+const client=mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
 client.on("connect",()=>client.subscribe("feeder/data"));
 
 client.on("message",(t,m)=>{
- const d=JSON.parse(m.toString());
- if(!feeders[d.feeder_id]) feeders[d.feeder_id]={hist:[],weight:0,stock:0};
- const f=feeders[d.feeder_id];
- f.weight=d.weight;
- f.stock=parseFloat(((10-d.distance)*10).toFixed(2));
+  const d=JSON.parse(m.toString());
+  feeders[d.feeder_id] ||= {hist:[]};
 
- if(d.uid && d.uid!==lastUID){
-   lastUID=d.uid;lastTap=Date.now();
-   f.hist.unshift("⏰ "+new Date().toLocaleTimeString()+" - "+d.uid);
-   if(f.hist.length>8)f.hist.pop();
-   cat.classList.add("eat");
-   setTimeout(()=>cat.classList.remove("eat"),600);
- }
+  let f=feeders[d.feeder_id];
+  f.weight=d.weight||0;
+  f.stock=Math.max(0,100-(d.distance||10)*10);
 
- if(d.feeder_id===current) render();
+  if(d.uid && d.uid!==lastUID){
+    lastUID=d.uid;
+    f.hist.unshift(`⏰ ${new Date().toLocaleTimeString()} - ${d.uid}`);
+    if(f.hist.length>6)f.hist.pop();
+    cat.classList.add("eat");
+    setTimeout(()=>cat.classList.remove("eat"),500);
+  }
+  render();
 });
 
 function render(){
- const f=feeders[current]||{};
- fidEl.innerText=current;
- weightEl.innerText=(f.weight||0).toFixed(1);
- stockEl.innerText=(f.stock||0).toFixed(2);
- barStock.style.width=(f.stock||0)+"%";
+  let f=feeders[current]||{};
+  weightEl.innerText=f.weight?.toFixed(1)||0;
+  stockEl.innerText=f.stock?.toFixed(2)||0;
+  barStock.style.width=(f.stock||0)+"%";
 
- let mood="Banyak",emo="😺";
- if(f.stock<=10){mood="Habis";emo="😵";}
- else if(f.stock<=30){mood="Sedikit";emo="😿";}
- else if(f.stock<=70){mood="Sedang";emo="😸";}
- stokLabel.innerText=mood;cat.innerText=emo;
+  let mood="Banyak",emoji="😺";
+  if(f.stock<=10){mood="Habis";emoji="😵"}
+  else if(f.stock<=30){mood="Sedikit";emoji="😿"}
+  else if(f.stock<=70){mood="Sedang";emoji="😸"}
+  stokLabel.innerText=mood;
+  cat.innerText=emoji;
 
- historyEl.innerHTML="";
- (f.hist||[]).forEach(x=>{
-   const li=document.createElement("li");
-   li.innerText=x;historyEl.appendChild(li);
- });
-}
-
-btn1.onclick=()=>switchFeeder(1);
-btn2.onclick=()=>switchFeeder(2);
-function switchFeeder(n){
- current="FEEDER_"+n;
- btn1.classList.remove("active");
- btn2.classList.remove("active");
- document.getElementById("btn"+n).classList.add("active");
- render();
+  historyEl.innerHTML="";
+  (f.hist||[]).forEach(h=>{
+    let li=document.createElement("li");
+    li.innerText=h;
+    historyEl.appendChild(li);
+  });
 }
