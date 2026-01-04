@@ -1,50 +1,47 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>🐱 Smart Cat Feeder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Cat Feeder</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 </head>
 <body class="dark">
-<div class="phone">
 
-  <div class="statusbar">
-    <span id="timeTop">--:--</span>
-    <span>📡 MQTT</span>
-    <span>🔋88%</span>
+<div class="status-bar">
+  <span id="clock">00:00</span>
+  <span>📡 MQTT</span>
+  <span>🔋88% <button id="themeToggle">🌙</button></span>
+</div>
+
+<h1>😺 Smart Cat Feeder</h1>
+<div id="date"></div>
+<div id="status" class="status connected">CONNECTED</div>
+
+<div class="switch">
+  <button id="btn1" class="active">Feeder 1</button>
+  <button id="btn2">Feeder 2</button>
+</div>
+
+<div class="feeder glass">
+  <div id="cat" class="cat idle">😺</div>
+  <h2 id="fid">FEEDER_1</h2>
+
+  <div class="stats">
+    <div class="stat-card">🍗 Berat<br><b><span id="weight">0</span> g</b></div>
+    <div class="stat-card">📦 Stok<br><b><span id="stock">0</span>%</b></div>
+    <div class="stat-card">😸 Mood<br><b id="stokLabel">-</b></div>
+    <div class="stat-card">📡 Status<br><b>MQTT</b></div>
   </div>
 
-  <h1>😺 Smart Cat Feeder</h1>
-  <p id="dateNow">--</p>
-
-  <div id="statusBox" class="status disconnected">DISCONNECTED</div>
-
-  <div class="switch">
-    <button id="btn1" class="active" onclick="showFeeder(1)">Feeder 1</button>
-    <button id="btn2" onclick="showFeeder(2)">Feeder 2</button>
+  <div class="progress">
+    <div id="barStock"></div>
   </div>
 
-  <div class="card glass">
-    <div id="moodIcon" class="cat">😸</div>
-    <h2 id="fid">FEEDER_1</h2>
-
-    <div class="grid">
-      <div>🍗 Berat<br><b><span id="weight">0</span> g</b></div>
-      <div>📦 Stok<br><b><span id="stock">0</span>%</b></div>
-      <div>😺 Mood<br><b id="stokLabel">-</b></div>
-      <div>📡 Status<br><b id="mqttStat">OFF</b></div>
-    </div>
-
-    <div class="progress">
-      <div id="barStock"></div>
-    </div>
-  </div>
-
-  <h3>📊 Riwayat Tap</h3>
+  <h3>Riwayat Tap</h3>
   <ul id="history"></ul>
-
 </div>
 
 <script src="app.js"></script>
