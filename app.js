@@ -1,3 +1,4 @@
+// ==== ELEMENT ====
 const statusBox = document.getElementById("status");
 const weightEl  = document.getElementById("weight");
 const stockEl   = document.getElementById("stock");
@@ -8,17 +9,36 @@ const barStock  = document.getElementById("barStock");
 const cat       = document.getElementById("cat");
 const btn1      = document.getElementById("btn1");
 const btn2      = document.getElementById("btn2");
+const clockEl   = document.getElementById("clock");
+const dateEl    = document.getElementById("date");
+const themeBtn  = document.getElementById("themeToggle");
 
-let current = "FEEDER_1";
-let feeders = {};
-let lastUID = "";
-let lastTapTime = 0;
+// ==== CLOCK & DATE ====
+setInterval(()=>{
+  const now = new Date();
+  clockEl.innerText = now.toLocaleTimeString("id-ID");
+  dateEl.innerText  = now.toLocaleDateString("id-ID",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+},1000);
 
+// ==== DARK LIGHT MODE ====
+function setTheme(mode){
+  document.body.className = mode;
+  localStorage.setItem("theme",mode);
+  themeBtn.innerText = mode==="dark"?"🌙":"☀️";
+}
+themeBtn.onclick=()=>{
+  setTheme(document.body.classList.contains("dark")?"light":"dark");
+};
+setTheme(localStorage.getItem("theme")||"dark");
+
+// ==== STATE ====
+let current="FEEDER_1",feeders={},lastUID="",lastTap=0;
+
+// ==== MQTT ====
 const client = mqtt.connect("wss://1f1fb9c5b684449c8ecce6cc5f320ad5.s1.eu.hivemq.cloud:8884/mqtt",{
   clientId:"web_"+Math.random().toString(16).substr(2,8),
   username:"TugasBesar",
-  password:"Leadtheway23",
-  reconnectPeriod:2000
+  password:"Leadtheway23"
 });
 
 client.on("connect",()=>{
@@ -27,24 +47,21 @@ client.on("connect",()=>{
 });
 
 client.on("message",(t,m)=>{
-  const d = JSON.parse(m.toString());
-  if(!feeders[d.feeder_id]) feeders[d.feeder_id]={hist:[]};
-  const f = feeders[d.feeder_id];
+  const d=JSON.parse(m.toString());
+  if(!feeders[d.feeder_id]) feeders[d.feeder_id]={hist:[],weight:0,stock:0};
+  const f=feeders[d.feeder_id];
 
   f.weight=d.weight;
-  let percent=d.distance>10?0:(10-d.distance)*10;
-  f.stock=parseFloat(percent.toFixed(2));
+  f.stock=parseFloat(((10-d.distance)*10).toFixed(2));
 
   if(d.uid && d.uid!==lastUID){
-    lastUID=d.uid;
-    lastTapTime=Date.now();
+    lastUID=d.uid; lastTap=Date.now();
     f.hist.unshift(`⏰ ${new Date().toLocaleTimeString()} - ${d.uid}`);
-    if(f.hist.length>8)f.hist.pop();
+    if(f.hist.length>6)f.hist.pop();
     cat.classList.add("eat");
     setTimeout(()=>cat.classList.remove("eat"),600);
   }
-  if(Date.now()-lastTapTime>2000)lastUID="";
-
+  if(Date.now()-lastTap>2000)lastUID="";
   if(d.feeder_id===current)render();
 });
 
@@ -79,20 +96,3 @@ function switchFeeder(n){
   document.getElementById("btn"+n).classList.add("active");
   render();
 }
-
-// ⏰ REALTIME CLOCK
-function updateDateTime(){
-  const now=new Date();
-  document.getElementById("clock").innerText=now.toLocaleTimeString("id-ID");
-  document.getElementById("date").innerText=now.toLocaleDateString("id-ID",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
-}
-setInterval(updateDateTime,1000);
-updateDateTime();
-
-// 🌙☀️ TOGGLE MODE
-document.getElementById("themeToggle").onclick=()=>{
-  document.body.classList.toggle("dark");
-  document.body.classList.toggle("light");
-  document.getElementById("themeToggle").innerText=
-    document.body.classList.contains("dark")?"🌙":"☀️";
-};
