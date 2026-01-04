@@ -4,13 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Cat Feeder</title>
+
 <link rel="stylesheet" href="style.css">
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 </head>
 <body class="dark">
 
+<div class="stars"></div>
+
 <div class="status-bar">
-  <span id="clock">00:00</span>
+  <span id="clock">00:00:00</span>
   <span>📡 MQTT</span>
   <span>🔋88% <button id="themeToggle">🌙</button></span>
 </div>
@@ -33,11 +36,6 @@
     <div class="stat-card">📦 Stok<br><b><span id="stock">0</span>%</b></div>
     <div class="stat-card">😸 Mood<br><b id="stokLabel">-</b></div>
     <div class="stat-card">📡 Status<br><b>MQTT</b></div>
-
-    <div class="stat-card ai-box">
-      ⏳ Perkiraan Makanan Habis<br>
-      <b id="aiPredict">Menghitung...</b>
-    </div>
   </div>
 
   <div class="progress"><div id="barStock"></div></div>
