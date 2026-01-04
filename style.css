@@ -1,53 +1,92 @@
-body{
-margin:0;font-family:Arial;
-background:radial-gradient(circle,#0f2b52,#020a16);
-color:white
+body {
+  margin:0;
+  font-family: 'Segoe UI',sans-serif;
+  background: linear-gradient(160deg,#2b5876,#4e4376);
+  display:flex;
+  justify-content:center;
+  color:white;
 }
-.app{text-align:center;padding:15px}
+
+.phone{
+  width:360px;
+  padding:20px;
+}
+
+.statusbar{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  opacity:.8;
+}
 
 .status{
-padding:10px 30px;border-radius:30px;
-display:inline-block;font-weight:bold
+  margin:10px 0;
+  padding:12px;
+  border-radius:20px;
+  text-align:center;
+  font-weight:bold;
 }
-.connected{background:#18ff99;color:black}
-.disconnected{background:#ff4d4d}
 
+.connected{background:#1cff95;color:black;}
+.disconnected{background:#ff5c5c;}
+
+.switch{
+  display:flex;
+  gap:10px;
+}
 .switch button{
-padding:10px 20px;border:none;
-border-radius:25px;margin:8px;
-background:#222;color:white
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:20px;
+  background:#444;
+  color:white;
 }
-.switch .active{background:#1fffd1;color:black}
+.switch .active{background:#1cff95;color:black;}
 
-.feeder{
-margin:auto;width:95vw;max-width:380px;
-background:linear-gradient(145deg,#0e1f36,#071223);
-border-radius:30px;padding:20px;
-box-shadow:0 0 25px #00ffd0;
-transition:.3s
-}
-.feeder.eat{box-shadow:0 0 40px #18ff99,0 0 80px #18ff99}
-
-.cat{font-size:80px;animation: float 3s ease-in-out infinite}
-.cat.hungry{animation:shake .4s infinite}
-
-@keyframes float{50%{transform:translateY(-10px)}}
-@keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-3px)}
-50%{transform:translateX(3px)}
-75%{transform:translateX(-3px)}
-100%{transform:translateX(0)}
+.glass{
+  margin-top:20px;
+  padding:20px;
+  border-radius:25px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
+  box-shadow:0 0 30px rgba(0,255,170,.6);
 }
 
-.cards{display:flex;justify-content:space-between}
-.card{width:45%;background:#08172b;border-radius:20px;padding:10px}
+.cat{
+  font-size:60px;
+  text-align:center;
+  animation:wiggle 2s infinite;
+}
+@keyframes wiggle{
+  0%,100%{transform:rotate(0)}
+  25%{transform:rotate(5deg)}
+  75%{transform:rotate(-5deg)}
+}
 
-.bar{width:100%;height:8px;background:#000;border-radius:10px;margin-top:5px}
-#barStock{height:100%;width:0%;background:#18ff99;border-radius:10px;transition:.5s}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:15px;
+}
+.grid div{
+  background:rgba(0,0,0,.3);
+  padding:10px;
+  border-radius:15px;
+}
 
-.stok-label{margin:15px auto;padding:12px;border-radius:30px;background:#18ff99;color:black;font-weight:bold}
+.progress{
+  height:10px;
+  background:#333;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:15px;
+}
+.progress div{
+  height:100%;
+  background:linear-gradient(90deg,#1cff95,#00ffa2);
+  width:0%;
+}
 
-ul{list-style:none;padding:0}
-li{font-size:14px;color:#00ffd5;animation:pop .3s ease}
-@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+ul{padding-left:20px;}
