@@ -5,7 +5,6 @@ body{
   transition:.5s;
   overflow-x:hidden;
 }
-
 body.dark{
   background:radial-gradient(circle at top,#3a0b52,#090018);
   color:#fff;
