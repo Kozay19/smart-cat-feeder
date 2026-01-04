@@ -2,17 +2,15 @@ body{
   font-family:system-ui;
   margin:0;padding:15px;
   min-height:100vh;
-  transition:.5s;
   overflow-x:hidden;
+  transition:.5s;
 }
 
-/* 🌌 GALAXY DARK MODE */
 body.dark{
-  background:radial-gradient(circle at top,#2b1055,#090a1a);
+  background:radial-gradient(circle at top,#3a0b52,#090018);
   color:#fff;
 }
 
-/* ☀️ LIGHT MODE */
 body.light{
   background:linear-gradient(160deg,#fdfbfb,#ebedee);
   color:#111;
@@ -20,66 +18,55 @@ body.light{
 
 .stars{
   position:fixed;inset:0;
-  background:url("https://raw.githubusercontent.com/Kozay19/assets/main/stars.png");
-  opacity:.35;
-  animation:moveStars 60s linear infinite;
+  background:
+    radial-gradient(1px 1px at 20% 30%,#fff,transparent),
+    radial-gradient(1px 1px at 80% 70%,#fff,transparent),
+    radial-gradient(1px 1px at 40% 80%,#fff,transparent),
+    radial-gradient(1px 1px at 70% 20%,#fff,transparent);
+  animation:twinkle 6s linear infinite;
   pointer-events:none;
 }
 
-@keyframes moveStars{
-  from{background-position:0 0;}
-  to{background-position:10000px 5000px;}
+@keyframes twinkle{
+  0%{opacity:.2;}50%{opacity:.8;}100%{opacity:.2;}
 }
 
-.status-bar{display:flex;justify-content:space-between;margin-bottom:10px;}
-#themeToggle{border:none;border-radius:50%;padding:5px 10px;cursor:pointer;}
+.status-bar{display:flex;justify-content:space-between;}
+#themeToggle{border:none;border-radius:50%;padding:6px}
 
 .status{padding:10px;border-radius:20px;text-align:center;margin:10px 0;}
 .connected{background:linear-gradient(90deg,#18ff99,#00c3ff);color:#003;}
 
-.switch{display:flex;gap:10px;}
-.switch button{
-  flex:1;border:none;padding:12px;
-  border-radius:30px;
-  background:rgba(255,255,255,.2);color:inherit;
-}
-.switch .active{background:linear-gradient(90deg,#18ff99,#00c3ff);color:#003;}
+.switch{display:flex;gap:10px}
+.switch button{flex:1;border:none;padding:12px;border-radius:30px}
+.switch .active{background:#18ff99;color:#003}
 
 .glass{
   background:rgba(255,255,255,.15);
   backdrop-filter:blur(18px);
   border-radius:28px;
-  padding:20px;margin:20px 0;
-  box-shadow:0 0 60px rgba(138,43,226,.7);
+  padding:20px;margin-top:20px;
+  box-shadow:0 0 40px rgba(0,255,200,.4);
 }
 
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat-card{
-  background:rgba(255,255,255,.2);
+  background:rgba(255,255,255,.25);
   border-radius:16px;
-  padding:14px;
+  padding:12px;
   text-align:center;
 }
 
-.progress{
-  background:#111;border-radius:10px;height:10px;margin-top:12px;
-  overflow:hidden;
-}
-
+.progress{background:#111;border-radius:10px;height:10px;margin-top:12px}
 .progress div{
   height:100%;width:0%;
-  background:linear-gradient(90deg,#18ff99,#00c3ff,#9b00ff);
-  transition:width .6s ease;
+  background:linear-gradient(90deg,#18ff99,#00c3ff,#b900ff);
+  transition:width .5s ease;
 }
 
-.cat{font-size:64px;text-align:center;}
-.cat.idle{animation:wiggle 2s infinite;}
-.cat.eat{animation:eat .5s infinite alternate;}
+.cat{font-size:64px;text-align:center}
+.cat.idle{animation:wiggle 2s infinite}
+.cat.eat{animation:eat .4s infinite alternate}
 
-@keyframes wiggle{0%{transform:rotate(0);}25%{transform:rotate(4deg);}50%{transform:rotate(-4deg);}100%{transform:rotate(0);}}
-@keyframes eat{from{transform:scale(1);}to{transform:scale(1.15);}}
+@keyframes wiggle{0%{transform:rotate(0)}25%{transform:rotate(4deg)}50%{transform:rotate(-4deg)}100%{transform:rotate(0)}}
+@keyframes eat{from{transform:scale(1)}to{transform:scale(1.15)}}
