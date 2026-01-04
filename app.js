@@ -1,74 +1,92 @@
-let feeder = 1;
-let stok = 0;
-let berat = 0;
+const statusBox = document.getElementById("status");
+const weightEl  = document.getElementById("weight");
+const stockEl   = document.getElementById("stock");
+const stokLabel = document.getElementById("stokLabel");
+const historyEl = document.getElementById("history");
+const fidEl     = document.getElementById("fid");
+const barStock  = document.getElementById("barStock");
+const cat       = document.getElementById("cat");
+const btn1      = document.getElementById("btn1");
+const btn2      = document.getElementById("btn2");
 
-const beratEl = document.getElementById("berat");
-const stokEl = document.getElementById("stok");
-const stokBar = document.getElementById("stokBar");
-const moodEl = document.getElementById("catMood");
-const moodText = document.getElementById("moodText");
-const statusText = document.getElementById("statusText");
-const log = document.getElementById("log");
-const mqttStatus = document.getElementById("mqttStatus");
+let current = "FEEDER_1";
+let feeders = {};
+let lastUID = "";
+let lastTapTime = 0;
 
-document.getElementById("btnF1").onclick=()=>switchFeeder(1);
-document.getElementById("btnF2").onclick=()=>switchFeeder(2);
-
-function switchFeeder(n){
-  feeder=n;
-  document.getElementById("btnF1").classList.toggle("active",n===1);
-  document.getElementById("btnF2").classList.toggle("active",n===2);
-  document.getElementById("feederTitle").innerText="FEEDER "+n;
-}
-
-function updateMood(){
-  let mood="😺",text="Banyak";
-  if(stok<=0){mood="😿";text="Habis";}
-  else if(stok<30){mood="😾";text="Sedikit";}
-  else if(stok<70){mood="😸";text="Sedang";}
-  moodEl.innerText=mood;
-  moodText.innerText=text;
-}
-
-function addLog(msg){
-  const li=document.createElement("li");
-  li.innerText=new Date().toLocaleTimeString()+" - "+msg;
-  log.prepend(li);
-}
-
-function updateDateTime(){
-  const now=new Date();
-  document.getElementById("datetime").innerText=
-    now.toLocaleTimeString("id-ID")+" "+now.toLocaleDateString("id-ID");
-}
-setInterval(updateDateTime,1000);updateDateTime();
-
-document.getElementById("themeToggle").onclick=()=>{
-  document.body.classList.toggle("light");
-};
-
-const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
+const client = mqtt.connect("wss://1f1fb9c5b684449c8ecce6cc5f320ad5.s1.eu.hivemq.cloud:8884/mqtt",{
+  clientId:"web_"+Math.random().toString(16).substr(2,8),
+  username:"TugasBesar",
+  password:"Leadtheway23",
+  protocol:"wss",
+  reconnectPeriod:2000,
+  clean:true
+});
 
 client.on("connect",()=>{
-  mqttStatus.innerText="CONNECTED";
-  statusText.innerText="Online";
-  client.subscribe("smartcat/feeder"+feeder+"/stok");
-  client.subscribe("smartcat/feeder"+feeder+"/berat");
+  statusBox.innerText="CONNECTED";
+  client.subscribe("feeder/data");
 });
 
 client.on("message",(topic,msg)=>{
-  const val=parseFloat(msg.toString());
-  if(topic.includes("stok")){
-    stok=parseFloat(val.toFixed(2));
-    stokEl.innerText=stok;
-    stokBar.value=stok;
-    updateMood();
-    addLog("Stok "+stok+"%");
-    if(stok<=0) alert("⚠️ MAKANAN HABIS!");
+  const d = JSON.parse(msg.toString());
+  if(!feeders[d.feeder_id]) feeders[d.feeder_id]={hist:[],weight:0,stock:0};
+  const f = feeders[d.feeder_id];
+
+  f.weight = d.weight;
+  let percent = d.distance > 10 ? 0 : (10 - d.distance) * 10;
+  f.stock = parseFloat(percent.toFixed(2));
+
+  if(d.uid && d.uid!=="" && d.uid!==lastUID){
+    lastUID=d.uid;
+    lastTapTime=Date.now();
+    f.hist.unshift(`⏰ ${new Date().toLocaleTimeString()} - ${d.uid}`);
+    if(f.hist.length>8) f.hist.pop();
+    cat.classList.add("eat");
+    setTimeout(()=>cat.classList.remove("eat"),600);
   }
-  if(topic.includes("berat")){
-    berat=val.toFixed(2);
-    beratEl.innerText=berat;
-    addLog("Berat "+berat+"g");
-  }
+
+  if(Date.now()-lastTapTime>2000) lastUID="";
+  if(d.feeder_id===current) render();
 });
+
+function render(){
+  const f=feeders[current]||{};
+  fidEl.innerText=current;
+  weightEl.innerText=(f.weight||0).toFixed(1);
+  stockEl.innerText=(f.stock||0).toFixed(2);
+  barStock.style.width=(f.stock||0)+"%";
+
+  let mood="Banyak",emoji="😺";
+  if(f.stock<=10){mood="Habis";emoji="😵";}
+  else if(f.stock<=30){mood="Sedikit";emoji="😿";}
+  else if(f.stock<=70){mood="Sedang";emoji="😸";}
+  stokLabel.innerText=mood;
+  cat.innerText=emoji;
+
+  historyEl.innerHTML="";
+  (f.hist||[]).forEach(x=>{
+    const li=document.createElement("li");
+    li.innerText=x;
+    historyEl.appendChild(li);
+  });
+}
+
+btn1.onclick=()=>switchFeeder(1);
+btn2.onclick=()=>switchFeeder(2);
+function switchFeeder(n){
+  current="FEEDER_"+n;
+  btn1.classList.remove("active");
+  btn2.classList.remove("active");
+  document.getElementById("btn"+n).classList.add("active");
+  render();
+}
+
+// ==== REALTIME CLOCK & DATE ====
+function updateDateTime(){
+  const now=new Date();
+  document.getElementById("clock").innerText=now.toLocaleTimeString("id-ID");
+  document.getElementById("date").innerText=now.toLocaleDateString("id-ID",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
+}
+setInterval(updateDateTime,1000);
+updateDateTime();
