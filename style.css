@@ -1,88 +1,62 @@
 body{
   font-family:system-ui;
-  margin:0;
-  padding:15px;
+  margin:0;padding:15px;
   min-height:100vh;
-  overflow-x:hidden;
   transition:.5s;
+  overflow-x:hidden;
 }
 
-/* 🌑 DARK MODE GALAXY */
 body.dark{
-  background:
-    radial-gradient(circle at 20% 10%, #5b1a8f, transparent 40%),
-    radial-gradient(circle at 80% 20%, #2c0b55, transparent 45%),
-    radial-gradient(circle at 50% 80%, #12002b, #050010);
+  background:radial-gradient(circle at top,#3a0b52,#090018);
   color:#fff;
 }
-
-/* ☀️ LIGHT MODE */
 body.light{
-  background:linear-gradient(160deg,#e8f3ff,#ffffff);
+  background:linear-gradient(160deg,#fdfbff,#e6ecff);
   color:#111;
 }
 
-/* ✨ STAR LAYER */
 .stars{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
+  position:fixed;inset:0;
   background:
-    radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.7),transparent),
-    radial-gradient(1px 1px at 30% 80%,rgba(255,255,255,.6),transparent),
-    radial-gradient(1px 1px at 60% 40%,rgba(255,255,255,.5),transparent),
-    radial-gradient(1px 1px at 80% 70%,rgba(255,255,255,.7),transparent),
-    radial-gradient(1px 1px at 90% 10%,rgba(255,255,255,.4),transparent);
+   radial-gradient(1px 1px at 20% 30%,#fff8,transparent),
+   radial-gradient(1px 1px at 70% 80%,#fff6,transparent),
+   radial-gradient(1px 1px at 40% 60%,#fff5,transparent),
+   radial-gradient(1px 1px at 90% 10%,#fff6,transparent),
+   linear-gradient(160deg,#3a0b52,#090018);
   animation:twinkle 6s infinite alternate;
   z-index:-1;
 }
-
 @keyframes twinkle{
-  0%{opacity:.2}
-  50%{opacity:.7}
-  100%{opacity:.3}
+  from{opacity:.4;}to{opacity:1;}
 }
 
-/* UI ELEMENTS */
-.status-bar{display:flex;justify-content:space-between;}
-#themeToggle{border:none;border-radius:50%;padding:6px;background:#fff;}
+.status-bar{display:flex;justify-content:space-between}
+#themeToggle{border:none;border-radius:50%;padding:6px;cursor:pointer}
 
-.status{padding:10px;border-radius:20px;text-align:center;margin:10px 0;}
-.connected{background:linear-gradient(90deg,#18ff99,#00c3ff);color:#003;}
+.status{padding:10px;border-radius:20px;text-align:center;margin:10px 0}
+.connected{background:linear-gradient(90deg,#18ff99,#00c3ff);color:#003}
 
-.switch{display:flex;gap:10px;}
-.switch button{flex:1;border:none;padding:12px;border-radius:30px;background:rgba(255,255,255,.25);}
-.switch .active{background:#18ff99;color:#003;}
+.switch{display:flex;gap:10px}
+.switch button{flex:1;border:none;padding:12px;border-radius:30px}
+.switch .active{background:#18ff99;color:#003}
 
 .glass{
   background:rgba(255,255,255,.18);
-  backdrop-filter:blur(16px);
+  backdrop-filter:blur(18px);
   border-radius:28px;
-  padding:20px;
-  margin:20px 0;
-  box-shadow:0 0 45px rgba(138,43,226,.6);
+  padding:20px;margin:20px 0;
+  box-shadow:0 0 40px rgba(180,80,255,.5);
 }
 
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.stat-card{
-  background:rgba(255,255,255,.25);
-  border-radius:16px;
-  padding:12px;
-  text-align:center;
-}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat-card{background:rgba(255,255,255,.25);border-radius:16px;padding:12px;text-align:center}
 
-.progress{
-  background:#111;
-  border-radius:10px;
-  height:10px;
-  margin-top:12px;
-  overflow:hidden;
-}
+.progress{background:#111;border-radius:10px;height:10px;margin-top:12px}
 .progress div{
-  height:100%;
-  width:0%;
+  height:100%;width:0%;
   background:linear-gradient(90deg,#18ff99,#00c3ff,#b900ff);
-  transition:.5s;
+  border-radius:10px;
+  transition:.5s
 }
 
 .cat{font-size:64px;text-align:center}
