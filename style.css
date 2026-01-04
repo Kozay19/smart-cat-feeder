@@ -1,60 +1,69 @@
 body{
   font-family:system-ui;
-  margin:0;padding:15px;
+  margin:0;
+  padding:15px;
   min-height:100vh;
-  transition:.5s;
   overflow-x:hidden;
+  transition:.5s;
 }
 
-/* 🌌 GALAXY DARK MODE */
+/* 🌑 DARK MODE GALAXY */
 body.dark{
   background:
-    radial-gradient(circle at 20% 20%, #5f2b82 0%, transparent 40%),
-    radial-gradient(circle at 80% 30%, #2b0a3d 0%, transparent 45%),
-    radial-gradient(circle at 50% 80%, #3a0a55 0%, transparent 45%),
-    linear-gradient(160deg,#090014,#140020,#2b0040);
+    radial-gradient(circle at 20% 10%, #5b1a8f, transparent 40%),
+    radial-gradient(circle at 80% 20%, #2c0b55, transparent 45%),
+    radial-gradient(circle at 50% 80%, #12002b, #050010);
   color:#fff;
 }
 
 /* ☀️ LIGHT MODE */
 body.light{
-  background:linear-gradient(160deg,#fdfbfb,#e8ecf1);
+  background:linear-gradient(160deg,#e8f3ff,#ffffff);
   color:#111;
 }
 
-/* ✨ STARS */
+/* ✨ STAR LAYER */
 .stars{
-  position:fixed;inset:0;
-  background:
-    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
-    radial-gradient(1px 1px at 70% 80%, #fff, transparent),
-    radial-gradient(1px 1px at 40% 60%, #fff, transparent),
-    radial-gradient(1px 1px at 90% 10%, #fff, transparent);
-  opacity:.35;
-  animation:twinkle 4s infinite;
+  position:fixed;
+  inset:0;
   pointer-events:none;
+  background:
+    radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1px 1px at 30% 80%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1px 1px at 60% 40%,rgba(255,255,255,.5),transparent),
+    radial-gradient(1px 1px at 80% 70%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1px 1px at 90% 10%,rgba(255,255,255,.4),transparent);
+  animation:twinkle 6s infinite alternate;
+  z-index:-1;
 }
-@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.8}}
 
-.status-bar{display:flex;justify-content:space-between;align-items:center}
-#themeToggle{border:none;border-radius:50%;padding:6px;font-size:16px}
+@keyframes twinkle{
+  0%{opacity:.2}
+  50%{opacity:.7}
+  100%{opacity:.3}
+}
 
-.status{padding:10px;border-radius:20px;text-align:center;margin:10px 0}
-.connected{background:linear-gradient(90deg,#18ff99,#00c3ff);color:#003}
+/* UI ELEMENTS */
+.status-bar{display:flex;justify-content:space-between;}
+#themeToggle{border:none;border-radius:50%;padding:6px;background:#fff;}
 
-.switch{display:flex;gap:10px}
-.switch button{flex:1;border:none;padding:12px;border-radius:30px}
-.switch .active{background:#18ff99;color:#003}
+.status{padding:10px;border-radius:20px;text-align:center;margin:10px 0;}
+.connected{background:linear-gradient(90deg,#18ff99,#00c3ff);color:#003;}
+
+.switch{display:flex;gap:10px;}
+.switch button{flex:1;border:none;padding:12px;border-radius:30px;background:rgba(255,255,255,.25);}
+.switch .active{background:#18ff99;color:#003;}
 
 .glass{
-  background:rgba(255,255,255,.15);
-  backdrop-filter:blur(20px);
+  background:rgba(255,255,255,.18);
+  backdrop-filter:blur(16px);
   border-radius:28px;
-  padding:20px;margin:20px 0;
-  box-shadow:0 0 50px rgba(138,43,226,.7);
+  padding:20px;
+  margin:20px 0;
+  box-shadow:0 0 45px rgba(138,43,226,.6);
 }
 
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .stat-card{
   background:rgba(255,255,255,.25);
   border-radius:16px;
@@ -62,10 +71,17 @@ body.light{
   text-align:center;
 }
 
-.progress{background:#111;border-radius:10px;height:10px;margin-top:12px}
+.progress{
+  background:#111;
+  border-radius:10px;
+  height:10px;
+  margin-top:12px;
+  overflow:hidden;
+}
 .progress div{
-  height:100%;width:0%;
-  background:linear-gradient(90deg,#18ff99,#00c3ff,#9b00ff);
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#18ff99,#00c3ff,#b900ff);
   transition:.5s;
 }
 
@@ -73,5 +89,13 @@ body.light{
 .cat.idle{animation:wiggle 2s infinite}
 .cat.eat{animation:eat .4s infinite alternate}
 
-@keyframes wiggle{0%{transform:rotate(0)}25%{transform:rotate(4deg)}50%{transform:rotate(-4deg)}100%{transform:rotate(0)}}
-@keyframes eat{from{transform:scale(1)}to{transform:scale(1.15)}}
+@keyframes wiggle{
+  0%{transform:rotate(0)}
+  25%{transform:rotate(4deg)}
+  50%{transform:rotate(-4deg)}
+  100%{transform:rotate(0)}
+}
+@keyframes eat{
+  from{transform:scale(1)}
+  to{transform:scale(1.15)}
+}
