@@ -1,57 +1,85 @@
-body{font-family:system-ui;margin:0;padding:15px;min-height:100vh;transition:.4s}
+body{
+  font-family:system-ui;
+  margin:0;padding:15px;
+  min-height:100vh;
+  transition:.5s;
+  overflow-x:hidden;
+}
 
-/* 🌙 GALAXY MODE */
+/* 🌌 GALAXY DARK MODE */
 body.dark{
-  background:
-    radial-gradient(1px 1px at 20% 30%, #ffffff88, transparent),
-    radial-gradient(1px 1px at 70% 80%, #ffffff66, transparent),
-    radial-gradient(1px 1px at 40% 60%, #ffffff55, transparent),
-    radial-gradient(1px 1px at 90% 10%, #ffffff66, transparent),
-    linear-gradient(160deg,#2b003f,#3a0b63,#120024,#0b001a);
-  background-size:200px 200px,250px 250px,300px 300px,350px 350px,400% 400%;
-  animation:galaxy 20s linear infinite;
-  color:#f6e9ff;
+  background:radial-gradient(circle at top,#2b1055,#090a1a);
+  color:#fff;
 }
 
 /* ☀️ LIGHT MODE */
 body.light{
-  background:linear-gradient(160deg,#ffecd2,#fcb69f,#a1c4fd,#c2e9fb);
-  background-size:400% 400%;
-  animation:bgmove 14s ease infinite;
-  color:#003;
+  background:linear-gradient(160deg,#fdfbfb,#ebedee);
+  color:#111;
 }
 
-@keyframes galaxy{
-  0%{background-position:0 0,0 0,0 0,0 0,0% 50%;}
-  50%{background-position:100px 200px,150px 250px,200px 300px,250px 350px,100% 50%;}
-  100%{background-position:0 0,0 0,0 0,0 0,0% 50%;}
+.stars{
+  position:fixed;inset:0;
+  background:url("https://raw.githubusercontent.com/Kozay19/assets/main/stars.png");
+  opacity:.35;
+  animation:moveStars 60s linear infinite;
+  pointer-events:none;
 }
-@keyframes bgmove{0%{background-position:0%50%}50%{background-position:100%50%}100%{background-position:0%50%}}
 
-.status-bar{display:flex;justify-content:space-between;margin-bottom:10px}
-#themeToggle{border:none;border-radius:50%;padding:6px 10px}
+@keyframes moveStars{
+  from{background-position:0 0;}
+  to{background-position:10000px 5000px;}
+}
 
-.switch{display:flex;gap:10px}
-.switch button{flex:1;border:none;padding:12px;border-radius:30px;background:rgba(255,255,255,.2);color:inherit}
-.switch .active{background:#18ff99;color:#003}
+.status-bar{display:flex;justify-content:space-between;margin-bottom:10px;}
+#themeToggle{border:none;border-radius:50%;padding:5px 10px;cursor:pointer;}
+
+.status{padding:10px;border-radius:20px;text-align:center;margin:10px 0;}
+.connected{background:linear-gradient(90deg,#18ff99,#00c3ff);color:#003;}
+
+.switch{display:flex;gap:10px;}
+.switch button{
+  flex:1;border:none;padding:12px;
+  border-radius:30px;
+  background:rgba(255,255,255,.2);color:inherit;
+}
+.switch .active{background:linear-gradient(90deg,#18ff99,#00c3ff);color:#003;}
 
 .glass{
-  background:rgba(255,255,255,.2);
+  background:rgba(255,255,255,.15);
   backdrop-filter:blur(18px);
-  border-radius:30px;
+  border-radius:28px;
   padding:20px;margin:20px 0;
-  box-shadow:0 0 40px rgba(0,255,200,.6);
+  box-shadow:0 0 60px rgba(138,43,226,.7);
 }
 
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat-card{background:rgba(255,255,255,.3);border-radius:16px;padding:14px;text-align:center}
-.ai-box{grid-column:span 2;background:linear-gradient(90deg,#ff7ce5,#00f7ff);color:#003;font-weight:600}
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
 
-.progress{background:#111;border-radius:10px;height:10px;margin-top:12px}
-.progress div{background:linear-gradient(90deg,#18ff99,#00c3ff);height:100%;border-radius:10px}
+.stat-card{
+  background:rgba(255,255,255,.2);
+  border-radius:16px;
+  padding:14px;
+  text-align:center;
+}
 
-.cat{font-size:64px;text-align:center}
-.cat.idle{animation:wiggle 2s infinite}
-.cat.eat{animation:eat .5s infinite alternate}
-@keyframes wiggle{0%{rotate:0}50%{rotate:6deg}100%{rotate:0}}
-@keyframes eat{from{scale:1}to{scale:1.15}}
+.progress{
+  background:#111;border-radius:10px;height:10px;margin-top:12px;
+  overflow:hidden;
+}
+
+.progress div{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,#18ff99,#00c3ff,#9b00ff);
+  transition:width .6s ease;
+}
+
+.cat{font-size:64px;text-align:center;}
+.cat.idle{animation:wiggle 2s infinite;}
+.cat.eat{animation:eat .5s infinite alternate;}
+
+@keyframes wiggle{0%{transform:rotate(0);}25%{transform:rotate(4deg);}50%{transform:rotate(-4deg);}100%{transform:rotate(0);}}
+@keyframes eat{from{transform:scale(1);}to{transform:scale(1.15);}}
