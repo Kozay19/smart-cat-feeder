@@ -18,9 +18,7 @@ const client = mqtt.connect("wss://1f1fb9c5b684449c8ecce6cc5f320ad5.s1.eu.hivemq
   clientId:"web_"+Math.random().toString(16).substr(2,8),
   username:"TugasBesar",
   password:"Leadtheway23",
-  protocol:"wss",
-  reconnectPeriod:2000,
-  clean:true
+  reconnectPeriod:2000
 });
 
 client.on("connect",()=>{
@@ -28,26 +26,26 @@ client.on("connect",()=>{
   client.subscribe("feeder/data");
 });
 
-client.on("message",(topic,msg)=>{
-  const d = JSON.parse(msg.toString());
-  if(!feeders[d.feeder_id]) feeders[d.feeder_id]={hist:[],weight:0,stock:0};
+client.on("message",(t,m)=>{
+  const d = JSON.parse(m.toString());
+  if(!feeders[d.feeder_id]) feeders[d.feeder_id]={hist:[]};
   const f = feeders[d.feeder_id];
 
-  f.weight = d.weight;
-  let percent = d.distance > 10 ? 0 : (10 - d.distance) * 10;
-  f.stock = parseFloat(percent.toFixed(2));
+  f.weight=d.weight;
+  let percent=d.distance>10?0:(10-d.distance)*10;
+  f.stock=parseFloat(percent.toFixed(2));
 
-  if(d.uid && d.uid!=="" && d.uid!==lastUID){
+  if(d.uid && d.uid!==lastUID){
     lastUID=d.uid;
     lastTapTime=Date.now();
     f.hist.unshift(`⏰ ${new Date().toLocaleTimeString()} - ${d.uid}`);
-    if(f.hist.length>8) f.hist.pop();
+    if(f.hist.length>8)f.hist.pop();
     cat.classList.add("eat");
     setTimeout(()=>cat.classList.remove("eat"),600);
   }
+  if(Date.now()-lastTapTime>2000)lastUID="";
 
-  if(Date.now()-lastTapTime>2000) lastUID="";
-  if(d.feeder_id===current) render();
+  if(d.feeder_id===current)render();
 });
 
 function render(){
@@ -82,7 +80,7 @@ function switchFeeder(n){
   render();
 }
 
-// ==== REALTIME CLOCK & DATE ====
+// ⏰ REALTIME CLOCK
 function updateDateTime(){
   const now=new Date();
   document.getElementById("clock").innerText=now.toLocaleTimeString("id-ID");
@@ -90,3 +88,11 @@ function updateDateTime(){
 }
 setInterval(updateDateTime,1000);
 updateDateTime();
+
+// 🌙☀️ TOGGLE MODE
+document.getElementById("themeToggle").onclick=()=>{
+  document.body.classList.toggle("dark");
+  document.body.classList.toggle("light");
+  document.getElementById("themeToggle").innerText=
+    document.body.classList.contains("dark")?"🌙":"☀️";
+};
